@@ -8,6 +8,7 @@ import type {
   CreatePaymentResponse,
   MomoBaseResponse,
   MomoClientConfig,
+  MomoEnvironment,
   MomoWebhookPayload,
   QueryTransactionRequest,
   QueryTransactionResponse,
@@ -45,7 +46,7 @@ export class MomoClient {
     if (config.baseUrl) {
       this.baseUrl = normalizeBaseUrl(config.baseUrl);
     } else {
-      this.baseUrl = config.env === "production" ? MOMO_PRODUCTION_BASE_URL : MOMO_SANDBOX_BASE_URL;
+      this.baseUrl = resolveEnvironment(config.env) === "production" ? MOMO_PRODUCTION_BASE_URL : MOMO_SANDBOX_BASE_URL;
     }
   }
 
@@ -181,10 +182,26 @@ export class MomoClient {
   }
 }
 
+export namespace MomoClient {
+  export type MomoClientConfig = import("./types.js").MomoClientConfig;
+}
+
 function normalizeBaseUrl(baseUrl: string): string {
   if (!baseUrl) {
     throw new MomoSdkError("INVALID_CONFIG", "baseUrl cannot be empty");
   }
 
   return baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+}
+
+function resolveEnvironment(env?: string): MomoEnvironment {
+  if (!env || env === "sandbox") {
+    return "sandbox";
+  }
+
+  if (env === "production") {
+    return "production";
+  }
+
+  throw new MomoSdkError("INVALID_CONFIG", `Invalid env "${env}". Expected "sandbox" or "production".`);
 }

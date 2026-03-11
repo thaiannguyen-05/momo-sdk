@@ -4,7 +4,7 @@ export interface MomoClientConfig {
   partnerCode: string;
   accessKey: string;
   secretKey: string;
-  env?: MomoEnvironment;
+  env?: MomoEnvironment | (string & {});
   baseUrl?: string;
   timeoutMs?: number;
   fetchImpl?: typeof fetch;
