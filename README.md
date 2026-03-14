@@ -76,7 +76,7 @@ console.log(payment.payUrl);
 
 - Calls `POST /v2/gateway/api/refund/query`
 - Signature fields:
-  `accessKey,partnerCode,requestId`
+  `accessKey,orderId,partnerCode,requestId`
 
 ### `verifyWebhookSignature(payload)`
 

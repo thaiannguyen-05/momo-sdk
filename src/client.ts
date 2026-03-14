@@ -18,7 +18,7 @@ import type {
   RefundResponse
 } from "./types.js";
 
-const DEFAULT_TIMEOUT_MS = 10_000;
+const DEFAULT_TIMEOUT_MS = 30_000;
 
 interface RequestPayload {
   [key: string]: string | number | boolean;
@@ -50,10 +50,12 @@ export class MomoClient {
     }
   }
 
+  /** Generate a unique requestId for MoMo API calls. */
   createRequestId(): string {
     return randomUUID();
   }
 
+  /** Create a one-time wallet payment and return checkout URLs (payUrl/deeplink/qrCodeUrl). */
   async createPayment(request: CreatePaymentRequest): Promise<CreatePaymentResponse> {
     const requestId = this.createRequestId();
     const payload: RequestPayload = {
@@ -76,6 +78,7 @@ export class MomoClient {
     return this.post<CreatePaymentResponse>(ENDPOINTS.create, payload);
   }
 
+  /** Query transaction status by partner orderId. */
   async queryTransaction(request: QueryTransactionRequest): Promise<QueryTransactionResponse> {
     const requestId = this.createRequestId();
     const payload: RequestPayload = {
@@ -91,6 +94,7 @@ export class MomoClient {
     return this.post<QueryTransactionResponse>(ENDPOINTS.query, payload);
   }
 
+  /** Create a refund request for a successful transaction. */
   async refund(request: RefundRequest): Promise<RefundResponse> {
     const requestId = this.createRequestId();
     const payload: RequestPayload = {
@@ -109,11 +113,13 @@ export class MomoClient {
     return this.post<RefundResponse>(ENDPOINTS.refund, payload);
   }
 
+  /** Query refund processing status by refund requestId and refund orderId. */
   async queryRefundStatus(request: RefundQueryRequest): Promise<RefundQueryResponse> {
     const payload: RequestPayload = {
       partnerCode: this.partnerCode,
       accessKey: this.accessKey,
       requestId: request.requestId,
+      orderId: request.orderId,
       lang: request.lang ?? "vi"
     };
 
@@ -122,6 +128,7 @@ export class MomoClient {
     return this.post<RefundQueryResponse>(ENDPOINTS.refundQuery, payload);
   }
 
+  /** Verify MoMo webhook/IPN signature before updating internal payment state. */
   verifyWebhookSignature(payload: MomoWebhookPayload): boolean {
     const receivedSignature = String(payload.signature ?? "");
     if (!receivedSignature) {

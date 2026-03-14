@@ -31,7 +31,7 @@ export const SIGNATURE_FIELDS = {
     "requestId",
     "transId"
   ] as const,
-  queryRefundStatus: ["accessKey", "partnerCode", "requestId"] as const,
+  queryRefundStatus: ["accessKey", "orderId", "partnerCode", "requestId"] as const,
   callback: [
     "accessKey",
     "amount",

@@ -1,4 +1,5 @@
 export { MomoClient } from "./client.js";
+export { MomoClient as default } from "./client.js";
 export { MomoApiError, MomoSdkError } from "./errors.js";
 export {
   buildRawSignature,

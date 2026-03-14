@@ -16,6 +16,8 @@ export interface MomoBaseResponse {
   responseTime?: number;
   requestId?: string;
   extraData?: string;
+  partnerCode?: string;
+  lang?: "vi" | "en";
 }
 
 export interface CreatePaymentRequest {
@@ -31,11 +33,17 @@ export interface CreatePaymentRequest {
 }
 
 export interface CreatePaymentResponse extends MomoBaseResponse {
+  orderId?: string;
+  amount?: number;
   payUrl?: string;
+  shortLink?: string;
   deeplink?: string;
+  deeplinkMiniApp?: string;
   qrCodeUrl?: string;
   transId?: number;
-  orderId?: string;
+  signature?: string;
+  userFee?: string | number;
+  [key: string]: unknown;
 }
 
 export interface QueryTransactionRequest {
@@ -44,11 +52,18 @@ export interface QueryTransactionRequest {
 }
 
 export interface QueryTransactionResponse extends MomoBaseResponse {
-  partnerCode?: string;
   orderId?: string;
   amount?: number;
   transId?: number;
+  orderInfo?: string;
+  orderType?: string;
+  requestType?: string;
   payType?: string;
+  refundTrans?: unknown[];
+  paymentOption?: string;
+  promotionInfo?: unknown[];
+  signature?: string;
+  [key: string]: unknown;
 }
 
 export interface RefundRequest {
@@ -60,12 +75,15 @@ export interface RefundRequest {
 }
 
 export interface RefundResponse extends MomoBaseResponse {
+  orderId?: string;
   transId?: number;
   amount?: number;
+  [key: string]: unknown;
 }
 
 export interface RefundQueryRequest {
   requestId: string;
+  orderId: string;
   lang?: "vi" | "en";
 }
 
@@ -73,6 +91,9 @@ export interface RefundQueryResponse extends MomoBaseResponse {
   orderId?: string;
   transId?: number;
   amount?: number;
+  description?: string;
+  signature?: string;
+  [key: string]: unknown;
 }
 
 export interface MomoWebhookPayload {
