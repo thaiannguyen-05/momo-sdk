@@ -30,6 +30,7 @@ export interface CreatePaymentRequest {
   extraData?: string;
   autoCapture?: boolean;
   lang?: "vi" | "en";
+  requestId: string;
 }
 
 export interface CreatePaymentResponse extends MomoBaseResponse {

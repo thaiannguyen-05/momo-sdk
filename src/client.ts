@@ -50,18 +50,12 @@ export class MomoClient {
     }
   }
 
-  /** Generate a unique requestId for MoMo API calls. */
-  createRequestId(): string {
-    return randomUUID();
-  }
-
   /** Create a one-time wallet payment and return checkout URLs (payUrl/deeplink/qrCodeUrl). */
   async createPayment(request: CreatePaymentRequest): Promise<CreatePaymentResponse> {
-    const requestId = this.createRequestId();
     const payload: RequestPayload = {
       partnerCode: this.partnerCode,
       accessKey: this.accessKey,
-      requestId,
+      requestId: request.requestId,
       amount: request.amount,
       orderId: request.orderId,
       orderInfo: request.orderInfo,
@@ -80,11 +74,9 @@ export class MomoClient {
 
   /** Query transaction status by partner orderId. */
   async queryTransaction(request: QueryTransactionRequest): Promise<QueryTransactionResponse> {
-    const requestId = this.createRequestId();
     const payload: RequestPayload = {
       partnerCode: this.partnerCode,
       accessKey: this.accessKey,
-      requestId,
       orderId: request.orderId,
       lang: request.lang ?? "vi"
     };
@@ -96,11 +88,9 @@ export class MomoClient {
 
   /** Create a refund request for a successful transaction. */
   async refund(request: RefundRequest): Promise<RefundResponse> {
-    const requestId = this.createRequestId();
     const payload: RequestPayload = {
       partnerCode: this.partnerCode,
       accessKey: this.accessKey,
-      requestId,
       orderId: request.orderId,
       transId: request.transId,
       amount: request.amount,
